@@ -6,7 +6,7 @@ import JobDetails from "../components/JobDetails";
 import ContactForm  from "../components/ContactForm";
 
 const Home = () => {
-  const [visible, setVisible] = useState(4);
+  const [visible, setVisible] = useState(40);
   const {
     error,
     isPending,
@@ -15,7 +15,7 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const showMore = () => {
-    setVisible((prevVale) => prevVale + 4);
+    setVisible((prevVale) => prevVale + 40);
   };
   return (
     <div className="home">
