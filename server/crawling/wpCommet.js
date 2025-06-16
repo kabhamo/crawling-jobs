@@ -20,7 +20,8 @@ const wp = [
     "https://www.lsports.eu/careers/all",
     "https://www.hibob.com/careers",
     "https://cajarobotics.com/careers"
-  ];
+];
+  
   const wpComeet = (url) =>{
     axios.get(url).then((response) => {
       const html = response.data;
@@ -48,7 +49,7 @@ const wp = [
         }
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err.message, "#$$$$$$$$$$$$$$$$$$$$$$$$"));
   }
   
   const startWpComeet=async()=>{

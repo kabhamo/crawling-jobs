@@ -1,23 +1,55 @@
 const Jobs = require("../model/Jobs.mongo");
 
+//const saveData = async (title, link, location, idJob, companyName) => {
+//   // 1) Trim and normalize
+//  title    = (title    || '').trim();
+//  location = (location || '').trim();
+
+//  // 2) If either is empty, bail out early:
+//  if (!title || !location) {
+//    console.warn(
+//      `[saveData] skipping invalid job — title or location missing`,
+//      { title, location, idJob, companyName }
+//    );
+//    return;
+//  }
+
+//  const found = await Jobs.findOne({ idJob: idJob });
+//  if (!found) {
+//    try {
+//      const job = new Jobs({
+//        title: title,
+//        link: link,
+//        location: location,
+//        idJob: idJob,
+//        companyName: companyName,
+//      });
+//      await job.save();
+//      console.log(job);
+//    } catch (e) {
+//      console.log(e);
+//    }
+//  } else {
+//    console.log(`${title} ***** is already in the data with id ***** ${idJob}`);
+//  }
+//};
+
+
+// controllers/jobs.js :contentReference[oaicite:0]{index=0}
 const saveData = async (title, link, location, idJob, companyName) => {
-  const found = await Jobs.findOne({ idJob: idJob });
-  if (!found) {
-    try {
-      const job = new Jobs({
-        title: title,
-        link: link,
-        location: location,
-        idJob: idJob,
-        companyName: companyName,
-      });
-      await job.save();
-      console.log(job);
-    } catch (e) {
-      console.log(e);
+  try {
+    const result = await Jobs.findOneAndUpdate(
+      { idJob },
+      { $setOnInsert: { title, link, location, companyName, createdAt: new Date() } },
+      { upsert: true, new: false }
+    );
+    if (!result) {
+      console.log(`✔ saved job: ${title}@${location}`);
+    } else {
+      console.log(`↺ already exists: ${idJob}${title}@${location}`);
     }
-  } else {
-    console.log(`${title} ***** is already in the data with id ***** ${idJob}`);
+  } catch (err) {
+    console.error(`[saveData] error saving ${idJob}:`, err);
   }
 };
 

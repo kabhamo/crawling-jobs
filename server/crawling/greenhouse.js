@@ -59,7 +59,12 @@ const companyGreenhouse = [
 
   const greenHouse = (companyName) =>{
     console.log(companyName);
-    let url = "https://boards.greenhouse.io/" + companyName;
+    let url = "https://boards.greenhouse.io/"
+    if (companyName) {
+      url = "https://boards.greenhouse.io/" + companyName;
+    } else { 
+      console.log("Undefine#####");
+    }
       
     axios
       .get(url)
@@ -88,7 +93,7 @@ const companyGreenhouse = [
             //Jobs.push({ title, link, location, idJob,companyName,date:new Date() });
               });
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.log("##################################"));
         }
 
 const startGreenHouse=async()=>{

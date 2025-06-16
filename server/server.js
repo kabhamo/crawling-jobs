@@ -19,7 +19,8 @@ mongoose.connection.on("error", (err) => {
 const job = new CronJob({
   //* * * * * every minute --- for Debugging
   //0 */6 * * * every 6 hours --- in production
-  cronTime: "0 */6 * * *",
+  // cronTime: "0 * * * *",
+  cronTime: "* * * * *",
   onTick: function () {
     console.log("start crawling", new Date());
     startComeet();
@@ -38,3 +39,15 @@ async function startServer() {
 }
 
 startServer();
+
+
+
+/*
+docker run -d \
+  --name my-mongo \
+  -p 27017:27017 \
+  -e MONGO_INITDB_ROOT_USERNAME=admin \
+  -e MONGO_INITDB_ROOT_PASSWORD=secret \
+  -v ~/mongo-data:/data/db \
+  mongo:latest
+*/

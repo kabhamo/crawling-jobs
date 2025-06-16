@@ -1,7 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-const cities = require("./cities.json");
-const { saveData } = require= require('../controllers/jobs')
+const { processJob } = require("../utils/saveJob");
 
 const urls = [
   "https://www.comeet.com/jobs/accessibe/D5.00B",
@@ -124,25 +123,6 @@ const urls = [
   "https://www.comeet.com/jobs/gotech/47.003"
 ];
 
-const crawling =  job => {
-  let title = job?.name;
-  let location = job?.location?.name;
-  let locationCountry = job?.location?.country;
-  let locationCity = job?.location?.city;
-  let companyName = job?.company_name;
-  let idJob = `${companyName}-${job.uid}`;
-  let link = job?.url_comeet_hosted_page;
-  let isIsraelByLocation =
-    locationCountry?.toUpperCase().includes("ISRAEL") ||
-    locationCountry?.toUpperCase().includes("IL");
-  let isIsrelByCities = cities.some(
-    (x) =>
-      x.english_name === locationCity?.toUpperCase() ||
-      "TLV" == locationCity?.toUpperCase()
-  );
-  if (isIsraelByLocation || isIsrelByCities){
-     saveData(title, link, location, idJob,companyName)
-  }};
 
 const extractCompanyPositions = url =>
   axios.get(url).then(({data}) => {
@@ -150,14 +130,28 @@ const extractCompanyPositions = url =>
      [...$("script:not([src])")].map(e => {
       const reg = /^ *COMPANY_POSITIONS_DATA *= *(.*)$/m;
       const match = $(e).text().match(reg);
-     const results=  match && JSON.parse(match[1].replace(/;+$/, ""));
-     results?.forEach(crawling);
+      const results = match && JSON.parse(match[1].replace(/;+$/, ""));
+      results?.forEach(job => {
+          processJob({
+            title: job.name,
+            link: job.url_comeet_hosted_page,
+            country: job.location?.country,
+            city: job.location?.city,
+            location: job.location?.name,
+            companyName: job.company_name,
+            idJob: `${job.company_name}-${job.uid}`,
+          });
+        });
     })
   });
 
-  const startComeet=async()=>{
-    const crawlCalls=urls.map(extractCompanyPositions);
-    const crawlResults = await Promise.all(crawlCalls);
+  async function startComeet() {
+  await Promise.all(
+    urls.map(url => {
+      extractCompanyPositions(url)
+    }
+    )
+  );
+}
 
-  }
 module.exports = startComeet;

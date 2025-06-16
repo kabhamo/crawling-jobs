@@ -11,5 +11,5 @@ app.get('/', (req, res) => {
     res.send('<h1>Jobs API</h1>');
   });
 app.use('/api', jobsRouter);
-app.use('/contact',contactRouter);
+//app.use('/contact',contactRouter);
 module.exports=app;

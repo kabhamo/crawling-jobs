@@ -1,9 +1,9 @@
 
-const express = require('express')
+//const express = require('express')
 
-const router = express.Router()
-  const{contact}=require('../controllers/contact');
+//const router = express.Router()
+//  const{contact}=require('../controllers/contact');
 
-router.route('').post(contact);
+//router.route('').post(contact);
 
-module.exports = router
+//module.exports = router
